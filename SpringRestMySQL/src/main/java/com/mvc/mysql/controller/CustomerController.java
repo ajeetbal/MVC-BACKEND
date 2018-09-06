@@ -1,6 +1,8 @@
 package com.mvc.mysql.controller;
 
+
 import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -25,27 +27,29 @@ import com.mvc.mysql.repo.CustomerRepository;
 @RequestMapping("/api")
 public class CustomerController {
 
+
 	@Autowired
 	CustomerRepository repository;
 
-	@GetMapping("/customers")
+	//GET ALL PRODUCT DATA
+	@GetMapping("/products")
 	public List<Customer> getAllCustomers() {
-		System.out.println("Get all Customers...");
+		System.out.println("Get all Products...");
 
 		List<Customer> customers = new ArrayList<>();
 		repository.findAll().forEach(customers::add);
-
+		
 		return customers;
 	}
 
-	@PostMapping(value = "/customers/create")
+	@PostMapping(value = "/products/create")
 	public Customer postCustomer(@RequestBody Customer customer) {
 
-		Customer _customer = repository.save(new Customer(customer.getName(), customer.getAge()));
+		Customer _customer = repository.save(new Customer(customer.getName(), customer.getprice(),customer.getDate()));
 		return _customer;
 	}
 
-	@DeleteMapping("/customers/{id}")
+	@DeleteMapping("/products/{id}")
 	public ResponseEntity<String> deleteCustomer(@PathVariable("id") long id) {
 		System.out.println("Delete Customer with ID = " + id + "...");
 
@@ -54,7 +58,7 @@ public class CustomerController {
 		return new ResponseEntity<>("Customer has been deleted!", HttpStatus.OK);
 	}
 
-	@DeleteMapping("/customers/delete")
+	@DeleteMapping("/products/delete")
 	public ResponseEntity<String> deleteAllCustomers() {
 		System.out.println("Delete All Customers...");
 
@@ -63,14 +67,60 @@ public class CustomerController {
 		return new ResponseEntity<>("All customers have been deleted!", HttpStatus.OK);
 	}
 
-	@GetMapping(value = "customers/age/{age}")
-	public List<Customer> findByAge(@PathVariable int age) {
+	@GetMapping(value = "products/price/{price}")
+	public List<Customer> findByprice(@PathVariable int price) {
+		
+			
+			List<Customer> customers = repository.findByprice(price);
+	
+			return customers;
+	}
+	
+	@GetMapping(value = "products/month")
+	public List<Customer> findByMonth() {
+		
+			List<Customer> customers = repository.findByMonth();
+			return customers;
+	
+	}
+	
+	@GetMapping(value = "products/expired/")
+	public List<Customer> findByExpired() {
+		
+			
+			List<Customer> customers = repository.findByExpired();
+			return customers;
+	
+	}
+	@GetMapping(value = "products/not_expired/")
+	public List<Customer> findByNotExpired() {
+		
+			
+			List<Customer> customers = repository.findByNotExpired();
+			return customers;
 
-		List<Customer> customers = repository.findByAge(age);
+	}
+	
+	
+	
+		
+	@GetMapping(value = "products/price_between/{min}/{max}")
+	public List<Customer> findBypriceBetween(@PathVariable int min,@PathVariable int max) {
+		
+			
+			List<Customer> customers = repository.findBypriceBetween(min,max);
+			return customers;
+	}
+//		
+	@GetMapping(value = "products/name/{name}")
+	public List<Customer> findByName(@PathVariable String name) {
+
+		List<Customer> customers = repository.findByName(name);
 		return customers;
 	}
 
-	@PutMapping("/customers/{id}")
+	
+	@PutMapping("/products/{id}")
 	public ResponseEntity<Customer> updateCustomer(@PathVariable("id") long id, @RequestBody Customer customer) {
 		System.out.println("Update Customer with ID = " + id + "...");
 
@@ -79,8 +129,8 @@ public class CustomerController {
 		if (customerData.isPresent()) {
 			Customer _customer = customerData.get();
 			_customer.setName(customer.getName());
-			_customer.setAge(customer.getAge());
-			_customer.setActive(customer.isActive());
+			_customer.setprice(customer.getprice());
+			
 			return new ResponseEntity<>(repository.save(_customer), HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);

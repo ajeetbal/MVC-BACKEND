@@ -1,11 +1,22 @@
 package com.mvc.mysql.model;
 
+
+
+
+
+
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+
 
 @Entity
 @Table(name = "customer")
@@ -18,19 +29,32 @@ public class Customer {
 	@Column(name = "name")
 	private String name;
 
-	@Column(name = "age")
-	private int age;
+	@Column(name = "price")
+	private int price;
+	
 
-	@Column(name = "active")
-	private boolean active;
+	@Temporal(TemporalType.DATE)
+	@Column(name = "date")
+	private Date date; 
+	
+	
+	
+	public Date getDate() {
+		return date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
+	}
 
 	public Customer() {
 	}
 
-	public Customer(String name, int age) {
+	public Customer(String name, int price,Date date) {
 		this.name = name;
-		this.age = age;
-		this.active = false;
+		this.price = price;
+		this.date=date;
+		
 	}
 
 	public long getId() {
@@ -45,24 +69,24 @@ public class Customer {
 		return this.name;
 	}
 
-	public void setAge(int age) {
-		this.age = age;
+	public void setprice(int price) {
+		this.price = price;
 	}
 
-	public int getAge() {
-		return this.age;
+	public int getprice() {
+		return this.price;
 	}
 
-	public boolean isActive() {
-		return active;
-	}
 
-	public void setActive(boolean active) {
-		this.active = active;
-	}
 
 	@Override
 	public String toString() {
-		return "Customer [id=" + id + ", name=" + name + ", age=" + age + ", active=" + active + "]";
+		return "Customer [id=" + id + ", name=" + name + ", price=" + price +  " ]";
 	}
+
+
+
+	
+
+	
 }
